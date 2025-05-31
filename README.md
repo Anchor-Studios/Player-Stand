@@ -1,6 +1,6 @@
 # PlayerStand
 
-<img src="https://img.shields.io/badge/Platform-Minecraft-blue" alt="Minecraft"> <img src="https://img.shields.io/badge/License-MIT-blue" alt="License"> <img src="https://img.shields.io/badge/Status-Alpha-orange" alt="Status">
+<img src="https://img.shields.io/badge/Platform-Minecraft-blue" alt="Minecraft"> <img src="https://img.shields.io/badge/License-Custom-blue" alt="License"> <img src="https://img.shields.io/badge/Status-Alpha-orange" alt="Status">
 
 **Minecraft mod** that transforms armor stands into full player models with real skins and working armor functionality.
 
