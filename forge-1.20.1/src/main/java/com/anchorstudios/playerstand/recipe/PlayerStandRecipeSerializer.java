@@ -1,4 +1,4 @@
-package com.anchorstudios.playerstand;
+package com.anchorstudios.playerstand.recipe;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

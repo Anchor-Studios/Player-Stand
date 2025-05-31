@@ -1,9 +1,10 @@
-package com.anchorstudios.playerstand;
+package com.anchorstudios.playerstand.item;
 
+import com.anchorstudios.playerstand.entity.ModEntities;
+import com.anchorstudios.playerstand.entity.PlayerStandEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -13,10 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,29 +35,22 @@ public class PlayerStandItem extends Item {
             double spawnY = clickedPos.getY() + 1.0;
             double spawnZ = clickedPos.getZ() + 0.5;
 
+            PlayerStandEntity playerStand = ModEntities.PLAYER_STAND_ENTITY.get().create(level);
+            if (playerStand == null) return InteractionResult.FAIL;
 
-            ArmorStand armorStand = new ArmorStand(level, spawnX, spawnY, spawnZ);
-            armorStand.setNoGravity(false);
-            armorStand.setInvisible(false);
-            armorStand.setCustomName(Component.literal("Player Stand"));
+            playerStand.moveTo(spawnX, spawnY, spawnZ, context.getPlayer().getYRot() + 180, 0);
+            playerStand.setNoGravity(false);
+            playerStand.setInvisible(false);
+            playerStand.setCustomName(Component.literal("Player Stand"));
 
-            CompoundTag tag = stack.getTag();
-            if (tag != null && tag.contains("PlayerStandHeadId")) {
-                armorStand.getPersistentData().putString("PlayerStandHeadId", tag.getString("PlayerStandHeadId"));
-            }
-
-            float playerYaw = context.getPlayer().getYRot();
-            armorStand.setYRot(playerYaw + 180); // Face toward player
-
-
-            level.addFreshEntity(armorStand);
+            level.addFreshEntity(playerStand);
 
             level.playSound(null, spawnX, spawnY, spawnZ,
                     SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
 
             // Consume the item if not in creative mode
             if (!context.getPlayer().isCreative()) {
-                context.getItemInHand().shrink(1);
+                stack.shrink(1);
             }
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
@@ -116,7 +107,7 @@ public class PlayerStandItem extends Item {
         // Store display name
         tag.putString("PlayerStandHeadName", headStack.getHoverName().getString());
 
-        // Store internal head ID using modern registry (1.20+)
+        // Store internal head ID
         ResourceLocation headId = BuiltInRegistries.ITEM.getKey(headStack.getItem());
         tag.putString("PlayerStandHeadId", headId.toString());
     }
