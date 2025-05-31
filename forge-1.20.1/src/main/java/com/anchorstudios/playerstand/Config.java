@@ -1,0 +1,50 @@
+package com.anchorstudios.playerstand;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+import java.util.Set;
+
+@Mod.EventBusSubscriber(modid = PlayerStand.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class Config {
+
+    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+
+    // === General Settings ===
+    public static final ForgeConfigSpec.BooleanValue ALLOW_PLAYER_BINDING = BUILDER
+            .comment("Allow right-clicking the player stand to bind it to the player's skin.")
+            .define("allowPlayerBinding", true);
+
+    public static final ForgeConfigSpec.BooleanValue ALLOW_MOB_HEAD_BINDING = BUILDER
+            .comment("Allow crafting with mob heads to turn player stands into mob models.")
+            .define("allowMobHeadBinding", true);
+
+    public static final ForgeConfigSpec.IntValue MAX_STANDS_PER_CHUNK = BUILDER
+            .comment("Maximum number of player stands allowed per chunk (0 = unlimited).")
+            .defineInRange("maxStandsPerChunk", 0, 0, Integer.MAX_VALUE);
+
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    // Loaded values
+    public static boolean allowPlayerBinding;
+    public static boolean allowMobHeadBinding;
+    public static int maxStandsPerChunk;
+
+    private static boolean validateItemName(final Object obj) {
+        if (!(obj instanceof String itemName)) return false;
+        if (!ResourceLocation.isValidResourceLocation(itemName)) return false;
+        return ForgeRegistries.ITEMS.containsKey(ResourceLocation.tryParse(itemName)
+        );
+    }
+
+    @SubscribeEvent
+    static void onLoad(final ModConfigEvent event) {
+        allowPlayerBinding = ALLOW_PLAYER_BINDING.get();
+        allowMobHeadBinding = ALLOW_MOB_HEAD_BINDING.get();
+        maxStandsPerChunk = MAX_STANDS_PER_CHUNK.get();
+    }
+}
