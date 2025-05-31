@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,26 +36,40 @@ public class PlayerStandItem extends Item {
             double spawnY = clickedPos.getY() + 1.0;
             double spawnZ = clickedPos.getZ() + 0.5;
 
-            PlayerStandEntity playerStand = ModEntities.PLAYER_STAND_ENTITY.get().create(level);
-            if (playerStand == null) return InteractionResult.FAIL;
+            AABB spawnBox = new AABB(spawnX - 0.25, spawnY, spawnZ - 0.25, spawnX + 0.25, spawnY + 2.0, spawnZ + 0.25);
+            if (!level.noCollision(spawnBox)) {
+                return InteractionResult.FAIL;
+            }
 
-            playerStand.moveTo(spawnX, spawnY, spawnZ, context.getPlayer().getYRot() + 180, 0);
-            playerStand.setNoGravity(false);
-            playerStand.setInvisible(false);
-            playerStand.setCustomName(Component.literal("Player Stand"));
+            PlayerStandEntity entity = new PlayerStandEntity(ModEntities.PLAYER_STAND_ENTITY.get(), level);
+            entity.setPos(spawnX, spawnY, spawnZ);
+            entity.setCustomName(Component.literal("Player Stand"));
 
-            level.addFreshEntity(playerStand);
 
-            level.playSound(null, spawnX, spawnY, spawnZ,
-                    SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
+            // Calculate yaw so the entity faces the player
+            double dx = context.getPlayer().getX() - spawnX;
+            double dz = context.getPlayer().getZ() - spawnZ;
+            float yaw = (float) (Math.atan2(dz, dx) * (180D / Math.PI)) - 90F;
+            entity.setYRot(yaw);
+            entity.yHeadRot = yaw;
+            entity.yBodyRot = yaw;
 
-            // Consume the item if not in creative mode
+            CompoundTag tag = stack.getTag();
+            if (tag != null && tag.contains("PlayerStandHeadId")) {
+                entity.getPersistentData().putString("PlayerStandHeadId", tag.getString("PlayerStandHeadId"));
+            }
+
+            level.addFreshEntity(entity);
+            level.playSound(null, spawnX, spawnY, spawnZ, SoundEvents.ARMOR_STAND_PLACE, SoundSource.BLOCKS, 0.75F, 0.8F);
+
             if (!context.getPlayer().isCreative()) {
-                stack.shrink(1);
+                context.getItemInHand().shrink(1);
             }
         }
+
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
+
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {

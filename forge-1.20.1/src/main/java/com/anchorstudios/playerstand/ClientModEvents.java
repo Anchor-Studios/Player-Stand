@@ -1,4 +1,4 @@
-package com.anchorstudios.playerstand.client;
+package com.anchorstudios.playerstand;
 
 import com.anchorstudios.playerstand.PlayerStand;
 import com.anchorstudios.playerstand.entity.ModEntities;
