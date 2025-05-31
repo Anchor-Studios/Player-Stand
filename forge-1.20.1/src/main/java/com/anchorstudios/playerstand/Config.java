@@ -19,6 +19,10 @@ public class Config {
             .comment("Allow right-clicking the player stand to bind it to the player's skin.")
             .define("allowPlayerBinding", true);
 
+    public static final ForgeConfigSpec.BooleanValue ALLOW_RETEXTURE_EXISTING = BUILDER
+            .comment("Allow changing the texture of an already skinned Player Stand by right-clicking again.")
+            .define("allowRetextureExisting", false);
+
     public static final ForgeConfigSpec.BooleanValue ALLOW_MOB_HEAD_BINDING = BUILDER
             .comment("Allow crafting with mob heads to turn player stands into mob models.")
             .define("allowMobHeadBinding", true);
@@ -32,6 +36,7 @@ public class Config {
     // Loaded values
     public static boolean allowPlayerBinding;
     public static boolean allowMobHeadBinding;
+    public static boolean allowRetextureExisting;
     public static int maxStandsPerChunk;
 
     private static boolean validateItemName(final Object obj) {
@@ -46,5 +51,6 @@ public class Config {
         allowPlayerBinding = ALLOW_PLAYER_BINDING.get();
         allowMobHeadBinding = ALLOW_MOB_HEAD_BINDING.get();
         maxStandsPerChunk = MAX_STANDS_PER_CHUNK.get();
+        allowRetextureExisting = ALLOW_RETEXTURE_EXISTING.get();
     }
 }

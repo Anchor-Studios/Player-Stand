@@ -1,13 +1,19 @@
 package com.anchorstudios.playerstand.entity;
 
+import com.anchorstudios.playerstand.Config;
 import com.anchorstudios.playerstand.PlayerStand;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
@@ -75,6 +81,33 @@ public class PlayerStandEntity extends Mob {
     @Override
     public boolean canCollideWith(Entity entity) {
         return false;
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (!this.level().isClientSide && hand == InteractionHand.MAIN_HAND && Config.ALLOW_PLAYER_BINDING.get()) {
+            ItemStack heldItem = player.getMainHandItem();
+
+            if (heldItem.isEmpty()) {
+                CompoundTag data = this.getPersistentData();
+
+                boolean alreadyHasTexture = data.contains("PlayerStandHeadId");
+                boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
+
+                if (canRetexture) {
+                    // Set skin to player UUID
+                    data.putString("PlayerStandHeadId", player.getUUID().toString());
+
+                    // Set custom name to "<PlayerName>'s Player Stand"
+                    String displayName = player.getDisplayName().getString() + "'s Player Stand";
+                    this.setCustomName(Component.literal(displayName));
+
+                    return InteractionResult.SUCCESS;
+                }
+            }
+        }
+
+        return super.mobInteract(player, hand);
     }
 
     @Override

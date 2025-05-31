@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,21 +35,21 @@ public class PlayerStandItem extends Item {
         BlockPos clickedPos = context.getClickedPos();
         if (!level.isClientSide()) {
             ChunkPos chunkPos = new ChunkPos(clickedPos);
+
             int max = Config.MAX_STANDS_PER_CHUNK.get();
             if (max > 0) {
-                int count = 0;
-                for (PlayerStandEntity entity : level.getEntitiesOfClass(PlayerStandEntity.class,
-                        new AABB(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ(),
-                                chunkPos.getMaxBlockX(), level.getMaxBuildHeight(), chunkPos.getMaxBlockZ()))) {
-                    if (!entity.isRemoved()) count++;
-                }
-                if (count >= max) {
-                    if (context.getPlayer() != null) {
-                        context.getPlayer().displayClientMessage(
-                                Component.literal("This chunk already has the maximum number of stands (" + max + ")."),
-                                true
-                        );
-                    }
+                int minX = chunkPos.getMinBlockX();
+                int minZ = chunkPos.getMinBlockZ();
+                int maxX = chunkPos.getMaxBlockX();
+                int maxZ = chunkPos.getMaxBlockZ();
+
+                // Slightly extended bounds for safety
+                AABB chunkBox = new AABB(minX - 1, -64, minZ - 1, maxX + 2, level.getMaxBuildHeight(), maxZ + 2);
+
+                List<PlayerStandEntity> stands = level.getEntitiesOfClass(PlayerStandEntity.class, chunkBox);
+                int countStands = stands.size();
+
+                if (countStands >= max) {
                     return InteractionResult.FAIL;
                 }
             }
@@ -59,9 +60,12 @@ public class PlayerStandItem extends Item {
             double spawnZ = clickedPos.getZ() + 0.5;
 
             AABB spawnBox = new AABB(spawnX - 0.25, spawnY, spawnZ - 0.25, spawnX + 0.25, spawnY + 2.0, spawnZ + 0.25);
-            if (!level.noCollision(spawnBox)) {
+            List<PlayerStandEntity> nearbyStands = level.getEntitiesOfClass(PlayerStandEntity.class, spawnBox, e -> !e.isRemoved());
+
+            if (!nearbyStands.isEmpty()) {
                 return InteractionResult.FAIL;
             }
+
 
             PlayerStandEntity entity = new PlayerStandEntity(ModEntities.PLAYER_STAND_ENTITY.get(), level);
             entity.setPos(spawnX, spawnY, spawnZ);
