@@ -1,5 +1,6 @@
 package com.anchorstudios.playerstand.item;
 
+import com.anchorstudios.playerstand.Config;
 import com.anchorstudios.playerstand.entity.ModEntities;
 import com.anchorstudios.playerstand.entity.PlayerStandEntity;
 import net.minecraft.core.BlockPos;
@@ -14,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
@@ -29,8 +31,28 @@ public class PlayerStandItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
+        BlockPos clickedPos = context.getClickedPos();
         if (!level.isClientSide()) {
-            BlockPos clickedPos = context.getClickedPos();
+            ChunkPos chunkPos = new ChunkPos(clickedPos);
+            int max = Config.MAX_STANDS_PER_CHUNK.get();
+            if (max > 0) {
+                int count = 0;
+                for (PlayerStandEntity entity : level.getEntitiesOfClass(PlayerStandEntity.class,
+                        new AABB(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ(),
+                                chunkPos.getMaxBlockX(), level.getMaxBuildHeight(), chunkPos.getMaxBlockZ()))) {
+                    if (!entity.isRemoved()) count++;
+                }
+                if (count >= max) {
+                    if (context.getPlayer() != null) {
+                        context.getPlayer().displayClientMessage(
+                                Component.literal("This chunk already has the maximum number of stands (" + max + ")."),
+                                true
+                        );
+                    }
+                    return InteractionResult.FAIL;
+                }
+            }
+
             ItemStack stack = context.getItemInHand();
             double spawnX = clickedPos.getX() + 0.5;
             double spawnY = clickedPos.getY() + 1.0;
