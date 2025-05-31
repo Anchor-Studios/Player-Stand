@@ -1,5 +1,6 @@
 package com.anchorstudios.playerstand;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -72,6 +73,23 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
         return newStand;
     }
 
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+        NonNullList<ItemStack> remaining = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
+
+        for (int i = 0; i < inv.getContainerSize(); ++i) {
+            ItemStack stack = inv.getItem(i);
+            if (stack.getItem() instanceof PlayerHeadItem || stack.is(Items.ZOMBIE_HEAD) || stack.is(Items.SKELETON_SKULL)) {
+                // Keep the head, do not consume
+                remaining.set(i, stack.copy());
+            } else {
+                // Use default remaining item if any
+                remaining.set(i, stack.getCraftingRemainingItem());
+            }
+        }
+
+        return remaining;
+    }
 
 
     @Override

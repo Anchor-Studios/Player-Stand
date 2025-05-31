@@ -32,6 +32,7 @@ public class PlayerStandItem extends Item {
         Level level = context.getLevel();
         if (!level.isClientSide()) {
             BlockPos clickedPos = context.getClickedPos();
+            ItemStack stack = context.getItemInHand();
             double spawnX = clickedPos.getX() + 0.5;
             double spawnY = clickedPos.getY() + 1.0;
             double spawnZ = clickedPos.getZ() + 0.5;
@@ -41,6 +42,11 @@ public class PlayerStandItem extends Item {
             armorStand.setNoGravity(false);
             armorStand.setInvisible(false);
             armorStand.setCustomName(Component.literal("Player Stand"));
+
+            CompoundTag tag = stack.getTag();
+            if (tag != null && tag.contains("PlayerStandHeadId")) {
+                armorStand.getPersistentData().putString("PlayerStandHeadId", tag.getString("PlayerStandHeadId"));
+            }
 
             float playerYaw = context.getPlayer().getYRot();
             armorStand.setYRot(playerYaw + 180); // Face toward player
