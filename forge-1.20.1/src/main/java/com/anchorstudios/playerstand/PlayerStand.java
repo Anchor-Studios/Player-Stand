@@ -24,7 +24,9 @@ public class PlayerStand {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public static final RegistryObject<Item> PLAYER_STAND_ITEM = ITEMS.register("player_stand",
-            () -> new Item(new Item.Properties())
+            () -> new PlayerStandItem(new Item.Properties()
+                    .stacksTo(16)
+            )
     );
 
     public static final RegistryObject<CreativeModeTab> PLAYER_STAND_TAB = CREATIVE_MODE_TABS.register("playerstand_tab",
