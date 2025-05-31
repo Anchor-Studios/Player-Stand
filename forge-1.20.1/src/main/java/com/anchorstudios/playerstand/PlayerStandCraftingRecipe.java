@@ -34,7 +34,7 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
                 if (stack.getItem() instanceof PlayerStandItem) {
                     if (foundStand) return false;
                     foundStand = true;
-                } else if (stack.getItem() instanceof PlayerHeadItem || stack.is(Items.ZOMBIE_HEAD) || stack.is(Items.SKELETON_SKULL)) {
+                } else if (Config.ALLOW_MOB_HEAD_BINDING.get() && (stack.is(Items.ZOMBIE_HEAD) || stack.is(Items.SKELETON_SKULL))) {
                     if (foundHead) return false;
                     foundHead = true;
                 } else {
