@@ -40,7 +40,6 @@ public class PlayerStandEntity extends Mob {
         return true;
     }
 
-
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (this.isInvulnerableTo(source)) {
@@ -77,7 +76,6 @@ public class PlayerStandEntity extends Mob {
         return damaged;
     }
 
-
     @Override
     public boolean canCollideWith(Entity entity) {
         return false;
@@ -95,8 +93,7 @@ public class PlayerStandEntity extends Mob {
                 boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
 
                 if (canRetexture) {
-                    // Set skin to player UUID
-                    data.putString("PlayerStandHeadId", player.getUUID().toString());
+                    data.putString("PlayerStandHeadId", player.getDisplayName().getString());
 
                     // Set custom name to "<PlayerName>'s Player Stand"
                     String displayName = player.getDisplayName().getString() + "'s Player Stand";
@@ -132,8 +129,6 @@ public class PlayerStandEntity extends Mob {
         return false;
     }
 
-
-    // Optional: define attributes
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 5.0D)
