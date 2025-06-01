@@ -22,4 +22,10 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
     public ResourceLocation getTextureLocation(PlayerStandEntity entity) {
         return TEXTURE;
     }
+
+    @Override
+    protected boolean shouldShowName(PlayerStandEntity entity) {
+        entity.setCustomNameVisible(false);
+        return entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity;
+    }
 }
