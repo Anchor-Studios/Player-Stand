@@ -93,8 +93,6 @@ public class PlayerStandEntity extends Mob {
                 boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
 
                 if (canRetexture) {
-                    data.putString("PlayerStandHeadId", player.getDisplayName().getString());
-
                     // Set custom name to "<PlayerName>'s Player Stand"
                     String displayName = player.getDisplayName().getString() + "'s Player Stand";
                     this.setCustomName(Component.literal(displayName));
