@@ -3,7 +3,6 @@ package com.anchorstudios.playerstand;
 import com.anchorstudios.playerstand.entity.ModEntities;
 import com.anchorstudios.playerstand.item.PlayerStandItem;
 import com.anchorstudios.playerstand.recipe.ModRecipes;
-import com.anchorstudios.playerstand.server.PlayerJoinHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -66,8 +65,6 @@ public class PlayerStand {
 
         // Register common setup (optional)
         modEventBus.addListener(this::commonSetup);
-
-        MinecraftForge.EVENT_BUS.register(PlayerJoinHandler.class);
     }
 
 

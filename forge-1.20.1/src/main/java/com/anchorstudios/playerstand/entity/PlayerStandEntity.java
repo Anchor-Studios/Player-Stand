@@ -95,7 +95,8 @@ public class PlayerStandEntity extends Mob {
                 boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
 
                 if (canRetexture) {
-                    this.getPersistentData().putString("PlayerStandHeadId", player.getDisplayName().getString());
+                    // Set skin to player UUID
+                    data.putString("PlayerStandHeadId", player.getUUID().toString());
 
                     // Set custom name to "<PlayerName>'s Player Stand"
                     String displayName = player.getDisplayName().getString() + "'s Player Stand";
