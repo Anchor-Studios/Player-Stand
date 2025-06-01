@@ -80,6 +80,8 @@ public class PlayerStandItem extends Item {
             entity.yHeadRot = yaw;
             entity.yBodyRot = yaw;
 
+            entity.setCustomNameVisible(false);
+
             CompoundTag tag = stack.getTag();
             if (tag != null && tag.contains("PlayerStandHeadId")) {
                 entity.getPersistentData().putString("PlayerStandHeadId", tag.getString("PlayerStandHeadId"));
