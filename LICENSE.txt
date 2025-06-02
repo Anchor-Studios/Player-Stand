@@ -8,8 +8,8 @@ You may use, modify, and redistribute this mod for personal or educational purpo
 2. Credit Required  
 You must provide appropriate credit by mentioning "Anchor Studios" as the original creator in any public distribution, including modpacks and modified versions.  
 Credit must also include a link to at least one official distribution page:  
-- Modrinth: https://modrinth.com/mod/player-stand  
-- CurseForge: https://www.curseforge.com/minecraft/mc-mods/player-stand
+- Modrinth: https://modrinth.com/mod/playerstand  
+- CurseForge: https://www.curseforge.com/minecraft/mc-mods/playerstand
 
 3. Modifications Allowed  
 You may create derivative works or modified versions of this mod. If redistributed, the modified version must clearly state the changes made and still credit the original author, including a link to one of the official mod pages listed above.
@@ -27,8 +27,8 @@ This mod is provided "as is", without warranty of any kind. Anchor Studios is no
 6. No Unauthorized Rehosting  
 You are not allowed to upload or redistribute this mod, or any modified version of it, on any third-party websites or platforms without explicit written permission from Anchor Studios.  
 The official distribution platforms for this mod are:  
-- Modrinth: https://modrinth.com/mod/player-stand  
-- CurseForge: https://www.curseforge.com/minecraft/mc-mods/player-stand
+- Modrinth: https://modrinth.com/mod/playerstand  
+- CurseForge: https://www.curseforge.com/minecraft/mc-mods/playerstand
 Posting this mod or modified versions on unauthorized websites is strictly prohibited.
 
 To request special permissions beyond these terms, please contact Anchor Studios.
