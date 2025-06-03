@@ -23,9 +23,7 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
     private static final ResourceLocation FALLBACK_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(PlayerStand.MODID, "textures/entity/player_stand_entity.png");
     private static final ResourceLocation ZOMBIE_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/zombie/zombie.png");
-    private static final ResourceLocation SKELETON_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/skeleton/skeleton.png");
+            ResourceLocation.fromNamespaceAndPath(PlayerStand.MODID, "textures/entity/zombie.png");
 
 
     public PlayerStandRenderer(EntityRendererProvider.Context context) {
@@ -41,8 +39,6 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
     private ResourceLocation getSkinForName(String name) {
         if (name.equals("NOT PLAYER")){
             return FALLBACK_TEXTURE;
-        } else if (name.equals("minecraft:skeleton_skull")) {
-            //skeleton here
         } else if (name.equals("minecraft:zombie_head")) {
             return ZOMBIE_TEXTURE;
         }
