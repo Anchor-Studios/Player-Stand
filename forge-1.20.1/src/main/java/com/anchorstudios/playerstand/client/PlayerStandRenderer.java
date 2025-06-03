@@ -36,6 +36,10 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
     private ResourceLocation getSkinForName(String name) {
         if (name == "NOT PLAYER"){
             return FALLBACK_TEXTURE;
+        } else if (name == "minecraft:skeleton_skull") {
+            //skeleton here
+        } else if (name == "minecraft:zombie_head") {
+            //zombie here
         }
 
         if (SKIN_CACHE.containsKey(name)) {

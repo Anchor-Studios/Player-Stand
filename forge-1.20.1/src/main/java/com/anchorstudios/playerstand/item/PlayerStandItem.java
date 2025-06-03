@@ -82,7 +82,18 @@ public class PlayerStandItem extends Item {
 
             CompoundTag tag = stack.getTag();
             if (tag != null && tag.contains("PlayerStandHeadId")) {
-                entity.getPersistentData().putString("PlayerStandHeadId", tag.getString("PlayerStandHeadId"));
+                String displayName = "Player Stand";
+                if (tag.contains("PlayerStandHeadName")) {
+                    displayName = tag.getString("PlayerStandHeadName");
+                    if (displayName.endsWith(" Head")) {
+                        displayName = displayName.substring(0, displayName.length() - 5);
+                    } else if (displayName.endsWith(" Skull")) {
+                        displayName = displayName.substring(0, displayName.length() - 6);
+                    }
+                    displayName = displayName + "'s Player Stand";
+                }
+                entity.setPlayerName(tag.getString("PlayerStandHeadId"));
+                entity.setCustomName(Component.literal(displayName));
             }
 
             level.addFreshEntity(entity);
@@ -112,8 +123,6 @@ public class PlayerStandItem extends Item {
             );
         }
     }
-
-
 
     // Preserve custom NBT when renamed in an Anvil
     @Override

@@ -77,18 +77,18 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
 
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() instanceof PlayerHeadItem || stack.is(Items.ZOMBIE_HEAD) || stack.is(Items.SKELETON_SKULL)) {
-                // Keep the head, do not consume
-                remaining.set(i, stack.copy());
-            } else {
-                // Use default remaining item if any
-                remaining.set(i, stack.getCraftingRemainingItem());
+            if (!stack.isEmpty()) {
+                if (stack.getItem() instanceof PlayerHeadItem || stack.is(Items.ZOMBIE_HEAD) || stack.is(Items.SKELETON_SKULL)) {
+                    // If count is 1, use copy to preserve it. If more than 1, return original.
+                    remaining.set(i, stack.getCount() == 1 ? stack.copy() : stack);
+                } else if (stack.hasCraftingRemainingItem()) {
+                    remaining.set(i, stack.getCraftingRemainingItem());
+                }
             }
         }
 
         return remaining;
     }
-
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {
