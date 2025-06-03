@@ -100,8 +100,6 @@ public class PlayerStandEntity extends Mob {
             ItemStack heldItem = player.getMainHandItem();
 
             if (heldItem.isEmpty()) {
-                CompoundTag data = this.getPersistentData();
-
                 boolean alreadyHasTexture = !("NOT PLAYER" == this.getPlayerName());
                 boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
 

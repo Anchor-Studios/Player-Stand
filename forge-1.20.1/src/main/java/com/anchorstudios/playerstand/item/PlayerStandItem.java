@@ -71,7 +71,6 @@ public class PlayerStandItem extends Item {
             entity.setPos(spawnX, spawnY, spawnZ);
             entity.setCustomName(Component.literal("Player Stand"));
 
-
             // Calculate yaw so the entity faces the player
             double dx = context.getPlayer().getX() - spawnX;
             double dz = context.getPlayer().getZ() - spawnZ;
@@ -82,7 +81,7 @@ public class PlayerStandItem extends Item {
 
             CompoundTag tag = stack.getTag();
             if (tag != null && tag.contains("PlayerStandHeadId")) {
-                String displayName = "Player Stand";
+                String displayName = "Mob";
                 if (tag.contains("PlayerStandHeadName")) {
                     displayName = tag.getString("PlayerStandHeadName");
                     if (displayName.endsWith(" Head")) {
