@@ -112,15 +112,26 @@ public class PlayerStandItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains("PlayerStandHeadId")) {
-            String headId = tag.getString("PlayerStandHeadId");
-            String displayName = headId.replace("minecraft:", "");
+            if (tag.getString("PlayerStandHeadId").equals("minecraft:zombie_head")){
+                String headId = tag.getString("PlayerStandHeadId");
+                String displayName = headId.replace("minecraft:", "");
 
-            tooltip.add(
-                    Component.literal("Current Model: ")
-                            .withStyle(net.minecraft.ChatFormatting.YELLOW)
-                            .append(Component.literal(displayName)
-                                    .withStyle(net.minecraft.ChatFormatting.GRAY, net.minecraft.ChatFormatting.ITALIC))
-            );
+                tooltip.add(
+                        Component.literal("Current Model: ")
+                                .withStyle(net.minecraft.ChatFormatting.YELLOW)
+                                .append(Component.literal(displayName)
+                                        .withStyle(net.minecraft.ChatFormatting.GRAY, net.minecraft.ChatFormatting.ITALIC))
+                );
+            } else if (tag != null && tag.contains("PlayerStandHeadName")) {
+                String headId = tag.getString("PlayerStandHeadName");
+
+                tooltip.add(
+                        Component.literal("Current Model: ")
+                                .withStyle(net.minecraft.ChatFormatting.YELLOW)
+                                .append(Component.literal(headId)
+                                        .withStyle(net.minecraft.ChatFormatting.GRAY, net.minecraft.ChatFormatting.ITALIC))
+                );
+            }
         }
     }
 
@@ -153,21 +164,27 @@ public class PlayerStandItem extends Item {
 
     public static void setHeadData(ItemStack standStack, ItemStack headStack) {
         CompoundTag tag = standStack.getOrCreateTag();
-        tag.putString("PlayerStandHeadName", headStack.getHoverName().getString());
         if (headStack.getItem() instanceof PlayerHeadItem) {
             if (headStack.hasTag()) {
                 CompoundTag itemTag = headStack.getTag();
                 if (itemTag.contains("SkullOwner", CompoundTag.TAG_COMPOUND)) {
                     CompoundTag skullOwner = itemTag.getCompound("SkullOwner");
-                    if (skullOwner.contains("Name", CompoundTag.TAG_STRING)) {
-                        String username = skullOwner.getString("Name");
-                        tag.putString("PlayerStandHeadId", username);
-                        return;
-                    }
+
+                    // Store full SkullOwner compound (with textures) in standStack NBT
+                    tag.put("PlayerStandHeadId", skullOwner.copy());
+
+                    // Store player name (if present), else fallback to hover name
+                    String playerName = skullOwner.contains("Name", CompoundTag.TAG_STRING)
+                            ? skullOwner.getString("Name")
+                            : headStack.getHoverName().getString();
+                    tag.putString("PlayerStandHeadName", playerName);
+
+                    return;
                 }
             }
 
-            // Fallback if no SkullOwner.Name — use raw item ID
+            // No SkullOwner tag, fallback:
+            tag.putString("PlayerStandHeadName", headStack.getHoverName().getString());
             ResourceLocation fallbackId = BuiltInRegistries.ITEM.getKey(headStack.getItem());
             tag.putString("PlayerStandHeadId", fallbackId.toString());
 

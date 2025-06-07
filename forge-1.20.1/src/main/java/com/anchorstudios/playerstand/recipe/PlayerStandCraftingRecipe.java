@@ -32,7 +32,7 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
                 if (stack.getItem() instanceof PlayerStandItem) {
                     if (foundStand) return false;
                     foundStand = true;
-                } else if (Config.ALLOW_HEAD_BINDING.get() && ((stack.getItem() instanceof PlayerHeadItem) || (stack.is(Items.ZOMBIE_HEAD)))) {
+                } else if (Config.ALLOW_HEAD_BINDING.get() && (stack.is(Items.ZOMBIE_HEAD))) {
                     if (foundHead) return false;
                     foundHead = true;
                 } else {
@@ -56,8 +56,7 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
                 newStand = stack.copy();
                 newStand.setCount(1);
             }
-            else if (stack.getItem() instanceof PlayerHeadItem ||
-                    stack.is(Items.ZOMBIE_HEAD)) {
+            else if (stack.is(Items.ZOMBIE_HEAD)) {
                 headStack = stack;
             }
         }
