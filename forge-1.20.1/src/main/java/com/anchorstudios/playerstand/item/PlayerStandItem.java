@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
@@ -81,7 +82,7 @@ public class PlayerStandItem extends Item {
 
             CompoundTag tag = stack.getTag();
             if (tag != null && tag.contains("PlayerStandHeadId")) {
-                String displayName = "Mob";
+                String displayName = "Player Stand";
                 if (tag.contains("PlayerStandHeadName")) {
                     displayName = tag.getString("PlayerStandHeadName");
                     if (displayName.endsWith(" Head")) {
@@ -152,13 +153,32 @@ public class PlayerStandItem extends Item {
 
     public static void setHeadData(ItemStack standStack, ItemStack headStack) {
         CompoundTag tag = standStack.getOrCreateTag();
-
-        // Store display name
         tag.putString("PlayerStandHeadName", headStack.getHoverName().getString());
+        if (headStack.getItem() instanceof PlayerHeadItem) {
+            if (headStack.hasTag()) {
+                CompoundTag itemTag = headStack.getTag();
+                if (itemTag.contains("SkullOwner", CompoundTag.TAG_COMPOUND)) {
+                    CompoundTag skullOwner = itemTag.getCompound("SkullOwner");
+                    if (skullOwner.contains("Name", CompoundTag.TAG_STRING)) {
+                        String username = skullOwner.getString("Name");
+                        tag.putString("PlayerStandHeadId", username);
+                        return;
+                    }
+                }
+            }
 
-        // Store internal head ID
-        ResourceLocation headId = BuiltInRegistries.ITEM.getKey(headStack.getItem());
-        tag.putString("PlayerStandHeadId", headId.toString());
+            // Fallback if no SkullOwner.Name — use raw item ID
+            ResourceLocation fallbackId = BuiltInRegistries.ITEM.getKey(headStack.getItem());
+            tag.putString("PlayerStandHeadId", fallbackId.toString());
+
+        } else {
+            // Store display name
+            tag.putString("PlayerStandHeadName", headStack.getHoverName().getString());
+
+            // Store internal head ID
+            ResourceLocation headId = BuiltInRegistries.ITEM.getKey(headStack.getItem());
+            tag.putString("PlayerStandHeadId", headId.toString());
+        }
     }
 
 }

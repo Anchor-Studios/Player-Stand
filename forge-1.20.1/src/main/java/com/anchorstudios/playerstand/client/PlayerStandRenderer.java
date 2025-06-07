@@ -47,7 +47,6 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
             return SKIN_CACHE.get(name);
         }
 
-        // Try to get player skin
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null) {
             for (Player player : mc.level.players()) {

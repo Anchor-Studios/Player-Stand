@@ -32,7 +32,7 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
                 if (stack.getItem() instanceof PlayerStandItem) {
                     if (foundStand) return false;
                     foundStand = true;
-                } else if (Config.ALLOW_MOB_HEAD_BINDING.get() && (stack.is(Items.ZOMBIE_HEAD))) {
+                } else if (Config.ALLOW_HEAD_BINDING.get() && ((stack.getItem() instanceof PlayerHeadItem) || (stack.is(Items.ZOMBIE_HEAD)))) {
                     if (foundHead) return false;
                     foundHead = true;
                 } else {
@@ -78,8 +78,13 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 if (stack.getItem() instanceof PlayerHeadItem || stack.is(Items.ZOMBIE_HEAD)) {
-                    // If count is 1, use copy to preserve it. If more than 1, return original.
-                    remaining.set(i, stack.getCount() == 1 ? stack.copy() : stack);
+                    if (stack.getCount() > 1) {
+                        ItemStack returnStack = stack.copy();
+                        returnStack.setCount(1);
+                        remaining.set(i, returnStack);
+                    } else {
+                        remaining.set(i, stack.copy());
+                    }
                 } else if (stack.hasCraftingRemainingItem()) {
                     remaining.set(i, stack.getCraftingRemainingItem());
                 }
@@ -88,6 +93,7 @@ public class PlayerStandCraftingRecipe extends CustomRecipe {
 
         return remaining;
     }
+
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {

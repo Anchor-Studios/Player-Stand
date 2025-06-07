@@ -23,9 +23,9 @@ public class Config {
             .comment("Allow changing the texture of an already skinned Player Stand by right-clicking again.")
             .define("allowRetextureExisting", false);
 
-    public static final ForgeConfigSpec.BooleanValue ALLOW_MOB_HEAD_BINDING = BUILDER
-            .comment("Allow crafting with mob heads to turn player stands into mob models.")
-            .define("allowMobHeadBinding", true);
+    public static final ForgeConfigSpec.BooleanValue ALLOW_HEAD_BINDING = BUILDER
+            .comment("Allow crafting with head items to turn player stands into those.")
+            .define("allowHeadBinding", true);
 
     public static final ForgeConfigSpec.IntValue MAX_STANDS_PER_CHUNK = BUILDER
             .comment("Maximum number of player stands allowed per chunk (0 = unlimited).")
@@ -35,7 +35,7 @@ public class Config {
 
     // Loaded values
     public static boolean allowPlayerBinding;
-    public static boolean allowMobHeadBinding;
+    public static boolean allowHeadBinding;
     public static boolean allowRetextureExisting;
     public static int maxStandsPerChunk;
 
@@ -49,7 +49,7 @@ public class Config {
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         allowPlayerBinding = ALLOW_PLAYER_BINDING.get();
-        allowMobHeadBinding = ALLOW_MOB_HEAD_BINDING.get();
+        allowHeadBinding = ALLOW_HEAD_BINDING.get();
         maxStandsPerChunk = MAX_STANDS_PER_CHUNK.get();
         allowRetextureExisting = ALLOW_RETEXTURE_EXISTING.get();
     }
