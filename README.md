@@ -1,6 +1,6 @@
 # Player Stand
 
-![Status: Stable](https://img.shields.io/badge/Status-Stable-green)  ![Latest Version: 1.0.0](https://img.shields.io/badge/Latest%20Version-1.0.0-blue)  ![License: Custom License](https://img.shields.io/badge/License-Custom-yellow)
+![Status: Stable](https://img.shields.io/badge/Status-Stable-green)  ![Latest Version: 1.0.0](https://img.shields.io/badge/Latest%20Version-1.0.0-blue)  ![License: Custom License](https://img.shields.io/badge/License-Custom-yellow) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/playerstand?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fplayerstand) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1073829?style=flat&logo=curseforge&label=Curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fplayerstand)
 
 **Player Stand** is a Minecraft mod that adds a fully customizable, player-shaped armor stand supporting real skins, armor equipping and interactive behavior.
 
@@ -18,17 +18,17 @@
 
 ## ✅ Compatibility
 
-- ✔️ **Minecraft:** 1.20.1 – 1.20.6
-- ✔️ **Environment:** Singleplayer & Multiplayer
-- ✔️ **Mod loaders:** Forge
+- **Minecraft:** 1.20.1 – 1.20.6
+- **Environment:** Singleplayer & Multiplayer
+- **Mod loaders:** Forge
 
 ---
 
 ## 📦 Installation
 
 1. Download the mod JAR from one of the following platforms:
-   - [![CurseForge](https://img.shields.io/badge/CurseForge-Download-orange?logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/playerstand)
-   - [![Modrinth](https://img.shields.io/modrinth/dt/playerstand?color=green&label=Modrinth)](https://modrinth.com/mod/playerstand)
+   - ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1073829?style=flat&logo=curseforge&label=Curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fplayerstand)
+   - ![Modrinth Downloads](https://img.shields.io/modrinth/dt/playerstand?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fplayerstand)
 
 2. Place the downloaded `.jar` file in the `mods/` folder for both **server** and **client**.
 
