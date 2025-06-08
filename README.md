@@ -27,8 +27,8 @@
 ## 📦 Installation
 
 1. Download the mod JAR from one of the following platforms:
-   - ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1073829?style=flat&logo=curseforge&label=Curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fplayerstand)
-   - ![Modrinth Downloads](https://img.shields.io/modrinth/dt/playerstand?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fplayerstand)
+   - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/playerstand)
+   - [Modrinth](https://modrinth.com/mod/playerstand)
 
 2. Place the downloaded `.jar` file in the `mods/` folder for both **server** and **client**.
 
