@@ -87,29 +87,39 @@ public class PlayerStandEntity extends Mob {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (this.isInvulnerableTo(source)) {
-            return false;
+        if (this.isInvulnerableTo(source)) return false;
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            this.kill();
+            return true;
         }
-
         if (!this.level().isClientSide && !this.isRemoved()) {
-            if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
-                this.kill();
-                return false;
-            }
-
             boolean instantBreak = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
-
-            if (instantBreak || this.getHealth() <= 0.0F) {
+            if (instantBreak) {
                 this.playBrokenSound();
-
-                if (!instantBreak) {
-                    this.dropAllDeathLoot(source);
-                    this.spawnAtLocation(PlayerStand.PLAYER_STAND_ITEM.get());
-                }
-
                 this.discard();
                 return true;
             }
+
+            // Apply damage
+            this.setHealth(this.getHealth() - 3.0F);
+
+            if (this.getHealth() <= 0) {
+                this.playBrokenSound();
+
+                // Drop all equipment (armor + hands)
+                for (EquipmentSlot slot : EquipmentSlot.values()) {
+                    ItemStack itemstack = this.getItemBySlot(slot);
+                    if (!itemstack.isEmpty()) {
+                        this.spawnAtLocation(itemstack);
+                        this.setItemSlot(slot, ItemStack.EMPTY);
+                    }
+                }
+
+                // Drop the stand item itself
+                this.spawnAtLocation(PlayerStand.PLAYER_STAND_ITEM.get());
+                this.discard();
+            }
+            return true;
         }
         return false;
     }
@@ -342,7 +352,7 @@ public class PlayerStandEntity extends Mob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MAX_HEALTH, 9.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
