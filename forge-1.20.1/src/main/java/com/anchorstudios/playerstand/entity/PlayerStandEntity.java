@@ -53,7 +53,6 @@ public class PlayerStandEntity extends Mob {
         this.noCulling = true;
     }
 
-
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -78,7 +77,7 @@ public class PlayerStandEntity extends Mob {
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return false;
     }
 
     @Override
@@ -102,9 +101,9 @@ public class PlayerStandEntity extends Mob {
 
             if (instantBreak || this.getHealth() <= 0.0F) {
                 this.playBrokenSound();
-                this.dropAllDeathLoot(source);
 
                 if (!instantBreak) {
+                    this.dropAllDeathLoot(source);
                     this.spawnAtLocation(PlayerStand.PLAYER_STAND_ITEM.get());
                 }
 
@@ -124,6 +123,7 @@ public class PlayerStandEntity extends Mob {
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 
+        // Always prioritize Player Stand interaction first
         if (!this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
             // Handle player binding with shift-right click
             if (player.isShiftKeyDown() && heldItem.isEmpty() && Config.ALLOW_PLAYER_BINDING.get()) {
@@ -142,10 +142,23 @@ public class PlayerStandEntity extends Mob {
             // Handle normal right-click interactions
             if (!player.isShiftKeyDown()) {
                 if (!heldItem.isEmpty()) {
-                    // Try to equip item to all possible slots
-                    for (EquipmentSlot slot : EQUIPMENT_ORDER) {
-                        if (isValidSlotForItem(heldItem, slot)) {
-                            return handleEquipmentInteraction(player, heldItem, slot);
+                    // Only accept single items
+                    if (heldItem.getCount() > 1) {
+                        return InteractionResult.PASS;
+                    }
+
+                    ItemStack singleItem = heldItem.copy();
+                    singleItem.setCount(1);
+
+                    // Get all valid slots for this item
+                    List<EquipmentSlot> validSlots = getValidSlotsForItem(singleItem);
+
+                    // Try to find first empty valid slot
+                    for (EquipmentSlot slot : validSlots) {
+                        if (this.getItemBySlot(slot).isEmpty()) {
+                            this.setItemSlot(slot, singleItem);
+                            player.getItemInHand(InteractionHand.MAIN_HAND).shrink(1);
+                            return InteractionResult.SUCCESS;
                         }
                     }
                     return InteractionResult.PASS;
@@ -155,8 +168,16 @@ public class PlayerStandEntity extends Mob {
                         EquipmentSlot slot = EQUIPMENT_ORDER.get(i);
                         ItemStack slotItem = this.getItemBySlot(slot);
                         if (!slotItem.isEmpty()) {
-                            player.setItemInHand(hand, slotItem.copy());
-                            this.setItemSlot(slot, ItemStack.EMPTY);
+                            // Give exactly 1 item back
+                            ItemStack singleItem = slotItem.copy();
+                            singleItem.setCount(1);
+                            player.setItemInHand(hand, singleItem);
+
+                            // Remove 1 from the stack
+                            slotItem.shrink(1);
+                            if (slotItem.isEmpty()) {
+                                this.setItemSlot(slot, ItemStack.EMPTY);
+                            }
                             return InteractionResult.SUCCESS;
                         }
                     }
@@ -168,37 +189,25 @@ public class PlayerStandEntity extends Mob {
         return InteractionResult.PASS;
     }
 
-    private boolean isValidSlotForItem(ItemStack stack, EquipmentSlot slot) {
-        // Check if item can go in this slot (doesn't check if slot is empty)
-        EquipmentSlot itemSlot = Mob.getEquipmentSlotForItem(stack);
+    private List<EquipmentSlot> getValidSlotsForItem(ItemStack stack) {
+        EquipmentSlot naturalSlot = Mob.getEquipmentSlotForItem(stack);
 
-        // Special case for armor - can go in mainhand/offhand too
-        if (itemSlot.getType() == EquipmentSlot.Type.ARMOR) {
-            return slot == itemSlot || slot.getType() == EquipmentSlot.Type.HAND;
+        // If it's armor, prioritize its natural slot first, then hands
+        if (naturalSlot.getType() == EquipmentSlot.Type.ARMOR) {
+            return Arrays.asList(
+                    naturalSlot,
+                    EquipmentSlot.MAINHAND,
+                    EquipmentSlot.OFFHAND
+            );
         }
 
-        // For non-armor items, only allow their natural slot
-        return slot == itemSlot;
+        // For non-armor items, just use hands
+        return Arrays.asList(
+                EquipmentSlot.MAINHAND,
+                EquipmentSlot.OFFHAND
+        );
     }
 
-    private InteractionResult handleEquipmentInteraction(Player player, ItemStack heldItem, EquipmentSlot slot) {
-        ItemStack currentItem = this.getItemBySlot(slot);
-
-        if (currentItem.isEmpty()) {
-            // Slot is empty - place item
-            ItemStack stackCopy = heldItem.copy();
-            stackCopy.setCount(1);
-            this.setItemSlot(slot, stackCopy);
-            heldItem.shrink(1);
-            return InteractionResult.SUCCESS;
-        } else {
-            // Slot has item - swap items
-            ItemStack currentCopy = currentItem.copy();
-            this.setItemSlot(slot, heldItem.copy().split(1));
-            player.setItemInHand(InteractionHand.MAIN_HAND, currentCopy);
-            return InteractionResult.SUCCESS;
-        }
-    }
 
     public void setPlayerName(String name) {
         this.getEntityData().set(PLAYER_NAME_DATA, name);
