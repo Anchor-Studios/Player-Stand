@@ -155,10 +155,6 @@ public class PlayerStandEntity extends Mob {
         // Handle normal right-click interactions
         if (!player.isShiftKeyDown()) {
             if (!heldItem.isEmpty()) {
-                // Only accept single items
-                if (heldItem.getCount() > 1) {
-                    return InteractionResult.SUCCESS; // Cancel vanilla but don't process
-                }
 
                 ItemStack singleItem = heldItem.copy();
                 singleItem.setCount(1);
