@@ -123,70 +123,72 @@ public class PlayerStandEntity extends Mob {
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
 
-        // Always prioritize Player Stand interaction first
-        if (!this.level().isClientSide && hand == InteractionHand.MAIN_HAND) {
-            // Handle player binding with shift-right click
-            if (player.isShiftKeyDown() && heldItem.isEmpty() && Config.ALLOW_PLAYER_BINDING.get()) {
-                boolean alreadyHasTexture = !"NOT PLAYER".equals(this.getPlayerName());
-                boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
+        // Always return SUCCESS to prevent vanilla armor equipping
+        if (this.level().isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
 
-                if (canRetexture) {
-                    this.setPlayerName(player.getName().getString());
-                    String displayName = player.getDisplayName().getString() + "'s Player Stand";
-                    this.setCustomName(Component.literal(displayName));
-                    return InteractionResult.SUCCESS;
-                }
-                return InteractionResult.PASS;
+        // Handle player binding with shift-right click
+        if (player.isShiftKeyDown() && heldItem.isEmpty() && Config.ALLOW_PLAYER_BINDING.get()) {
+            boolean alreadyHasTexture = !"NOT PLAYER".equals(this.getPlayerName());
+            boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
+
+            if (canRetexture) {
+                this.setPlayerName(player.getName().getString());
+                String displayName = player.getDisplayName().getString() + "'s Player Stand";
+                this.setCustomName(Component.literal(displayName));
+                return InteractionResult.SUCCESS;
             }
+            return InteractionResult.PASS;
+        }
 
-            // Handle normal right-click interactions
-            if (!player.isShiftKeyDown()) {
-                if (!heldItem.isEmpty()) {
-                    // Only accept single items
-                    if (heldItem.getCount() > 1) {
-                        return InteractionResult.PASS;
-                    }
-
-                    ItemStack singleItem = heldItem.copy();
-                    singleItem.setCount(1);
-
-                    // Get all valid slots for this item
-                    List<EquipmentSlot> validSlots = getValidSlotsForItem(singleItem);
-
-                    // Try to find first empty valid slot
-                    for (EquipmentSlot slot : validSlots) {
-                        if (this.getItemBySlot(slot).isEmpty()) {
-                            this.setItemSlot(slot, singleItem);
-                            player.getItemInHand(InteractionHand.MAIN_HAND).shrink(1);
-                            return InteractionResult.SUCCESS;
-                        }
-                    }
-                    return InteractionResult.PASS;
-                } else {
-                    // Try to take items in reverse order
-                    for (int i = EQUIPMENT_ORDER.size() - 1; i >= 0; i--) {
-                        EquipmentSlot slot = EQUIPMENT_ORDER.get(i);
-                        ItemStack slotItem = this.getItemBySlot(slot);
-                        if (!slotItem.isEmpty()) {
-                            // Give exactly 1 item back
-                            ItemStack singleItem = slotItem.copy();
-                            singleItem.setCount(1);
-                            player.setItemInHand(hand, singleItem);
-
-                            // Remove 1 from the stack
-                            slotItem.shrink(1);
-                            if (slotItem.isEmpty()) {
-                                this.setItemSlot(slot, ItemStack.EMPTY);
-                            }
-                            return InteractionResult.SUCCESS;
-                        }
-                    }
-                    return InteractionResult.PASS;
+        // Handle normal right-click interactions
+        if (!player.isShiftKeyDown()) {
+            if (!heldItem.isEmpty()) {
+                // Only accept single items
+                if (heldItem.getCount() > 1) {
+                    return InteractionResult.SUCCESS; // Cancel vanilla but don't process
                 }
+
+                ItemStack singleItem = heldItem.copy();
+                singleItem.setCount(1);
+
+                // Get all valid slots for this item
+                List<EquipmentSlot> validSlots = getValidSlotsForItem(singleItem);
+
+                // Try to find first empty valid slot
+                for (EquipmentSlot slot : validSlots) {
+                    if (this.getItemBySlot(slot).isEmpty()) {
+                        this.setItemSlot(slot, singleItem);
+                        player.setItemInHand(hand, heldItem.copyWithCount(heldItem.getCount() - 1));
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+                return InteractionResult.SUCCESS; // Cancel vanilla even if no slot available
+            } else {
+                // Try to take items in reverse order
+                for (int i = EQUIPMENT_ORDER.size() - 1; i >= 0; i--) {
+                    EquipmentSlot slot = EQUIPMENT_ORDER.get(i);
+                    ItemStack slotItem = this.getItemBySlot(slot);
+                    if (!slotItem.isEmpty()) {
+                        // Give exactly 1 item back
+                        ItemStack singleItem = slotItem.copy();
+                        singleItem.setCount(1);
+                        player.setItemInHand(hand, singleItem);
+
+                        // Remove 1 from the stack
+                        slotItem.shrink(1);
+                        if (slotItem.isEmpty()) {
+                            this.setItemSlot(slot, ItemStack.EMPTY);
+                        }
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+                return InteractionResult.SUCCESS; // Cancel vanilla even if no item taken
             }
         }
 
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS; // Always cancel vanilla interaction
     }
 
     private List<EquipmentSlot> getValidSlotsForItem(ItemStack stack) {
