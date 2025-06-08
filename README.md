@@ -44,7 +44,7 @@
 
 - Java 17 or newer  
 - Gradle 7+  
-- Minecraft mod development environment (e.g., Forge MDK)
+- Minecraft mod development environment
 
 ### Build Instructions
 
