@@ -9,7 +9,7 @@
 ## ✨ Features
 
 - 🧍 Adds a new placeable entity: **Player Stand**
-- 🧥 Supports **real Minecraft skins** by username (via NBT or item use)
+- 🧥 Supports **real Minecraft skins** by username (via NBT or default)
 - 🛡️ Retains **full armor equipping behavior**
 - 🔄 Skin and armor visuals **update live on the client**
 - 🔧 Optional config file ```/config showfile playerstand COMMON```
@@ -57,14 +57,24 @@
 
 ## 📜 License
 
-This project is licensed under a [Custom License](LICENSE).
+This project is licensed under a [Custom License](LICENSE.txt).
+
+✅ Free for personal & educational use  
+✅ Modifications and modpacks allowed (with credit and link)  
+✅ Monetized modpacks/add-ons allowed under specific conditions  
+❌ No commercial use of the mod or modified versions  
+❌ No rehosting of the original or modified .jar files outside of allowed contexts  
+🛠️ Provided as-is, with no warranty  
+
+Full license details can be found in the [LICENSE](LICENSE.txt) file.
 
 ---
 
 ## 🛠️ Support
 
 Found a bug or have a question?  
-📮 Report issues and get help at: [anchorstudios.site/issues](https://www.anchorstudios.site/issues)
+📮 Report issues at: [anchorstudios.site/issues](https://www.anchorstudios.site/issues)  
+💬 Chat with Developers and Community: [Discord Server](https://discord.gg/RNG8Q5dFE3)
 
 ---
 
