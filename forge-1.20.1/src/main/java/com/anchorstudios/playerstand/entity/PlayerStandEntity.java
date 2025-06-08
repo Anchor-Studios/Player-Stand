@@ -38,6 +38,10 @@ public class PlayerStandEntity extends Mob {
     private final NonNullList<ItemStack> armorItems = NonNullList.withSize(4, ItemStack.EMPTY);
     private boolean invisible;
 
+    private int noDamageTicks;
+    private static final int REGENERATION_DELAY = 100;
+    private static final float MAX_HEALTH_FLOAT = 9.0F;
+
     // Define the priority order for equipment slots
     private static final List<EquipmentSlot> EQUIPMENT_ORDER = Arrays.asList(
             EquipmentSlot.HEAD,
@@ -102,6 +106,8 @@ public class PlayerStandEntity extends Mob {
 
             // Apply damage
             this.setHealth(this.getHealth() - 3.0F);
+
+            this.noDamageTicks = 0;
 
             if (this.getHealth() <= 0) {
                 this.playBrokenSound();
@@ -229,6 +235,15 @@ public class PlayerStandEntity extends Mob {
     public void tick() {
         super.tick();
         this.hurtTime = 0; // reset every tick to prevent red flash
+
+        // Health regeneration logic
+        if (this.getHealth() < MAX_HEALTH_FLOAT && !this.isDeadOrDying()) {
+            if (this.noDamageTicks >= REGENERATION_DELAY) {
+                this.setHealth(MAX_HEALTH_FLOAT);
+            } else {
+                this.noDamageTicks++;
+            }
+        }
     }
 
     @Override
@@ -251,7 +266,7 @@ public class PlayerStandEntity extends Mob {
                 this.armorItems.set(i, ItemStack.of(armorItemsTag.getCompound(i)));
             }
         }
-
+        this.noDamageTicks = tag.getInt("NoDamageTicks");
         this.setInvisible(tag.getBoolean("Invisible"));
     }
 
@@ -272,6 +287,7 @@ public class PlayerStandEntity extends Mob {
         }
         tag.put("ArmorItems", armorItemsTag);
 
+        tag.putInt("NoDamageTicks", this.noDamageTicks);
         tag.putBoolean("Invisible", this.isInvisible());
     }
 
@@ -348,7 +364,7 @@ public class PlayerStandEntity extends Mob {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 9.0D)
+                .add(Attributes.MAX_HEALTH, MAX_HEALTH_FLOAT)
                 .add(Attributes.MOVEMENT_SPEED, 0.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
