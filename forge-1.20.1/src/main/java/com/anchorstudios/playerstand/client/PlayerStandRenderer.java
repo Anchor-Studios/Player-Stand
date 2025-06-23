@@ -95,15 +95,109 @@ class PlayerStandModel extends HumanoidModel<PlayerStandEntity> {
     public void setupAnim(PlayerStandEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
-        // Force left arm into a raised position
-        this.leftArm.xRot = (float) Math.toRadians(-90);  // Points forward
-        this.leftArm.yRot = 0;  // No rotation to the side
-        this.leftArm.zRot = 0;  // No rotation around
+        // Get the pose number from the entity
+        int poseNumber = entity.getEntityData().get(PlayerStandEntity.POSE_NUMBER);
 
-        // You can adjust these values to get the exact pose you want
-        // For example, to make it look like the entity is waving:
-        // this.leftArm.xRot = (float) Math.toRadians(-90);
-        // this.leftArm.yRot = (float) Math.toRadians(-45);
-        // this.leftArm.zRot = 0;
+        switch (poseNumber) {
+            case 0 -> { // Default standing
+            }
+
+            case 1 -> { // Casual hands behind back
+                this.leftArm.xRot = (float) Math.toRadians(-20);
+                this.leftArm.yRot = (float) Math.toRadians(-90);
+                this.rightArm.xRot = (float) Math.toRadians(-20);
+                this.rightArm.yRot = (float) Math.toRadians(90);
+            }
+
+            case 2 -> { // Thinking (hand on chin)
+                this.leftArm.xRot = (float) Math.toRadians(-90);
+                this.leftArm.yRot = (float) Math.toRadians(-30);
+                this.head.xRot = (float) Math.toRadians(10);
+            }
+
+            case 3 -> { // Pointing forward
+                this.rightArm.xRot = (float) Math.toRadians(-90);
+                this.leftArm.xRot = (float) Math.toRadians(-45);
+            }
+
+            case 4 -> { // Holding phone
+                this.leftArm.xRot = (float) Math.toRadians(-120);
+                this.leftArm.yRot = (float) Math.toRadians(-20);
+                this.leftArm.zRot = (float) Math.toRadians(15);
+                this.head.xRot = (float) Math.toRadians(15);
+            }
+
+            case 5 -> { // Holding shield
+                this.leftArm.xRot = (float) Math.toRadians(-90);
+                this.leftArm.yRot = (float) Math.toRadians(90);
+                this.rightArm.xRot = (float) Math.toRadians(-45);
+            }
+
+            case 6 -> { // Surprised (hands up)
+                this.leftArm.xRot = (float) Math.toRadians(-120);
+                this.rightArm.xRot = (float) Math.toRadians(-120);
+                this.head.xRot = (float) Math.toRadians(-10);
+            }
+
+            case 7 -> { // Holding cape
+                this.leftArm.xRot = (float) Math.toRadians(-45);
+                this.leftArm.yRot = (float) Math.toRadians(-120);
+                this.rightArm.xRot = (float) Math.toRadians(-45);
+                this.rightArm.yRot = (float) Math.toRadians(120);
+            }
+
+            case 8 -> { // Reading book
+                this.leftArm.xRot = (float) Math.toRadians(-90);
+                this.leftArm.yRot = (float) Math.toRadians(-45);
+                this.rightArm.xRot = (float) Math.toRadians(-60);
+                this.head.xRot = (float) Math.toRadians(30);
+            }
+
+            case 9 -> { // Holding torch
+                this.rightArm.xRot = (float) Math.toRadians(-150);
+                this.leftArm.xRot = (float) Math.toRadians(-30);
+                this.head.xRot = (float) Math.toRadians(15);
+            }
+
+            case 10 -> { // Salute
+                this.rightArm.xRot = (float) Math.toRadians(-120);
+                this.rightArm.yRot = (float) Math.toRadians(-15);
+            }
+
+            case 11 -> { // Holding sword
+                this.rightArm.xRot = (float) Math.toRadians(-135);
+                this.leftArm.xRot = (float) Math.toRadians(-45);
+                this.leftArm.yRot = (float) Math.toRadians(-30);
+            }
+
+            case 12 -> { // Hands on hips
+                this.leftArm.xRot = (float) Math.toRadians(-30);
+                this.leftArm.yRot = (float) Math.toRadians(-45);
+                this.rightArm.xRot = (float) Math.toRadians(-30);
+                this.rightArm.yRot = (float) Math.toRadians(45);
+            }
+
+            case 13 -> { // Holding bow
+                this.leftArm.xRot = (float) Math.toRadians(-90);
+                this.leftArm.yRot = (float) Math.toRadians(60);
+                this.rightArm.xRot = (float) Math.toRadians(-90);
+                this.rightArm.yRot = (float) Math.toRadians(-30);
+            }
+
+            case 14 -> { // Waving
+                this.rightArm.xRot = (float) Math.toRadians(-90);
+                this.rightArm.yRot = (float) Math.toRadians(-45);
+                this.rightArm.zRot = (float) Math.toRadians(15);
+            }
+
+            case 15 -> { // Holding staff
+                this.leftArm.xRot = (float) Math.toRadians(-90);
+                this.rightArm.xRot = (float) Math.toRadians(-90);
+                this.rightArm.yRot = (float) Math.toRadians(15);
+            }
+
+            default -> { // Fallback to default
+            }
+        }
     }
 }

@@ -19,6 +19,10 @@ public class Config {
             .comment("Allow right-clicking the player stand to bind it to the player's skin.")
             .define("allowPlayerBinding", true);
 
+    public static final ForgeConfigSpec.BooleanValue ALLOW_POSE_CHANGING = BUILDER
+            .comment("Allow changing poses by shift right-clicking the player stand.")
+            .define("allowPoseChanging", true);
+
     public static final ForgeConfigSpec.BooleanValue ALLOW_RETEXTURE_EXISTING = BUILDER
             .comment("Allow changing the texture of an already skinned Player Stand by right-clicking again.")
             .define("allowRetextureExisting", false);
@@ -35,20 +39,15 @@ public class Config {
 
     // Loaded values
     public static boolean allowPlayerBinding;
+    public static boolean allowPoseChanging;
     public static boolean allowHeadBinding;
     public static boolean allowRetextureExisting;
     public static int maxStandsPerChunk;
 
-    private static boolean validateItemName(final Object obj) {
-        if (!(obj instanceof String itemName)) return false;
-        if (!ResourceLocation.isValidResourceLocation(itemName)) return false;
-        return ForgeRegistries.ITEMS.containsKey(ResourceLocation.tryParse(itemName)
-        );
-    }
-
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         allowPlayerBinding = ALLOW_PLAYER_BINDING.get();
+        allowPoseChanging = ALLOW_POSE_CHANGING.get();
         allowHeadBinding = ALLOW_HEAD_BINDING.get();
         maxStandsPerChunk = MAX_STANDS_PER_CHUNK.get();
         allowRetextureExisting = ALLOW_RETEXTURE_EXISTING.get();

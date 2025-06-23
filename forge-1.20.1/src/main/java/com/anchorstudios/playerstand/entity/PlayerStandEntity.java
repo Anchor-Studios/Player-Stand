@@ -31,6 +31,9 @@ public class PlayerStandEntity extends Mob {
     private static final EntityDataAccessor<String> PLAYER_NAME_DATA =
             SynchedEntityData.defineId(PlayerStandEntity.class, EntityDataSerializers.STRING);
 
+    public static final EntityDataAccessor<Integer> POSE_NUMBER =
+            SynchedEntityData.defineId(PlayerStandEntity.class, EntityDataSerializers.INT);
+
     private static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS =
             SynchedEntityData.defineId(PlayerStandEntity.class, EntityDataSerializers.BYTE);
 
@@ -61,6 +64,7 @@ public class PlayerStandEntity extends Mob {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(PLAYER_NAME_DATA, "NOT PLAYER");
+        this.entityData.define(POSE_NUMBER, 0);
         this.entityData.define(DATA_CLIENT_FLAGS, (byte)0);
     }
 
@@ -144,18 +148,16 @@ public class PlayerStandEntity extends Mob {
             return InteractionResult.SUCCESS;
         }
 
-        // Handle player binding with shift-right click
-        if (player.isShiftKeyDown() && heldItem.isEmpty() && Config.ALLOW_PLAYER_BINDING.get()) {
-            boolean alreadyHasTexture = !"NOT PLAYER".equals(this.getPlayerName());
-            boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
-
-            if (canRetexture) {
-                this.setPlayerName(player.getName().getString());
-                String displayName = player.getDisplayName().getString() + "'s Player Stand";
-                this.setCustomName(Component.literal(displayName));
-                return InteractionResult.SUCCESS;
+        // Handle pose changing
+        if (player.isShiftKeyDown() && Config.ALLOW_POSE_CHANGING.get()) {
+            int currentpose = this.getEntityData().get(POSE_NUMBER);
+            if (currentpose >= 15){
+                currentpose = 0;
             }
-            return InteractionResult.PASS;
+            else {
+                currentpose = currentpose + 1;
+            }
+            this.getEntityData().set(POSE_NUMBER, currentpose);
         }
 
         // Handle normal right-click interactions
@@ -176,7 +178,19 @@ public class PlayerStandEntity extends Mob {
                         return InteractionResult.SUCCESS;
                     }
                 }
-                return InteractionResult.SUCCESS; // Cancel vanilla even if no slot available
+                // Handle player binding
+                if (Config.ALLOW_PLAYER_BINDING.get()) {
+                    boolean alreadyHasTexture = !"NOT PLAYER".equals(this.getPlayerName());
+                    boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
+
+                    if (canRetexture) {
+                        this.setPlayerName(player.getName().getString());
+                        String displayName = player.getDisplayName().getString() + "'s Player Stand";
+                        this.setCustomName(Component.literal(displayName));
+                        return InteractionResult.SUCCESS;
+                    }
+                    return InteractionResult.PASS;
+                }
             } else {
                 // Try to take items in reverse order
                 for (int i = EQUIPMENT_ORDER.size() - 1; i >= 0; i--) {
@@ -196,7 +210,19 @@ public class PlayerStandEntity extends Mob {
                         return InteractionResult.SUCCESS;
                     }
                 }
-                return InteractionResult.SUCCESS; // Cancel vanilla even if no item taken
+                // Handle player binding
+                if (Config.ALLOW_PLAYER_BINDING.get()) {
+                    boolean alreadyHasTexture = !"NOT PLAYER".equals(this.getPlayerName());
+                    boolean canRetexture = !alreadyHasTexture || Config.ALLOW_RETEXTURE_EXISTING.get();
+
+                    if (canRetexture) {
+                        this.setPlayerName(player.getName().getString());
+                        String displayName = player.getDisplayName().getString() + "'s Player Stand";
+                        this.setCustomName(Component.literal(displayName));
+                        return InteractionResult.SUCCESS;
+                    }
+                    return InteractionResult.PASS;
+                }
             }
         }
 
