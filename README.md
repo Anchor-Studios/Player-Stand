@@ -1,6 +1,6 @@
 # Player Stand
 
-![Status: Stable](https://img.shields.io/badge/Status-Stable-green)  ![Latest Version: 1.0.0](https://img.shields.io/badge/Latest%20Version-1.0.0-blue)  ![License: Custom License](https://img.shields.io/badge/License-Custom-yellow) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/playerstand?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fplayerstand) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1073829?style=flat&logo=curseforge&label=Curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fplayerstand)
+![Status: Stable](https://img.shields.io/badge/Status-Stable-green)  ![Latest Version: 1.0.1](https://img.shields.io/badge/Latest%20Version-1.0.1-blue)  ![License: Custom License](https://img.shields.io/badge/License-Custom-yellow) ![Modrinth Downloads](https://img.shields.io/modrinth/dt/playerstand?logo=modrinth&label=Modrinth&link=https%3A%2F%2Fmodrinth.com%2Fmod%2Fplayerstand) ![CurseForge Downloads](https://img.shields.io/curseforge/dt/1073829?style=flat&logo=curseforge&label=Curseforge&link=https%3A%2F%2Fwww.curseforge.com%2Fminecraft%2Fmc-mods%2Fplayerstand)
 
 **Player Stand** is a Minecraft mod that adds a fully customizable, player-shaped armor stand supporting real skins, armor equipping and interactive behavior.
 
