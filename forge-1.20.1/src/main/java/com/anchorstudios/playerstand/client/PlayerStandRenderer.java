@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity, HumanoidModel<PlayerStandEntity>> {
+public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity, PlayerStandModel> {
     private static final Map<String, ResourceLocation> SKIN_CACHE = new HashMap<>();
     private static final ResourceLocation FALLBACK_TEXTURE =
             ResourceLocation.fromNamespaceAndPath(PlayerStand.MODID, "textures/entity/player_stand_entity.png");
@@ -28,7 +29,7 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
             ResourceLocation.fromNamespaceAndPath(PlayerStand.MODID, "textures/entity/zombie.png");
 
     public PlayerStandRenderer(EntityRendererProvider.Context context) {
-        super(context, new HumanoidModel<>(context.bakeLayer(ModelLayers.PLAYER)), 0.5f);
+        super(context, new PlayerStandModel(context.bakeLayer(ModelLayers.PLAYER)), 0.5f);
 
         // Add armor and held item layers
         this.addLayer(new HumanoidArmorLayer<>(this,
@@ -82,5 +83,27 @@ public class PlayerStandRenderer extends LivingEntityRenderer<PlayerStandEntity,
     protected boolean shouldShowName(PlayerStandEntity entity) {
         entity.setCustomNameVisible(false);
         return entity.hasCustomName() && entity == this.entityRenderDispatcher.crosshairPickEntity;
+    }
+}
+
+class PlayerStandModel extends HumanoidModel<PlayerStandEntity> {
+    public PlayerStandModel(ModelPart root) {
+        super(root);
+    }
+
+    @Override
+    public void setupAnim(PlayerStandEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        // Force left arm into a raised position
+        this.leftArm.xRot = (float) Math.toRadians(-90);  // Points forward
+        this.leftArm.yRot = 0;  // No rotation to the side
+        this.leftArm.zRot = 0;  // No rotation around
+
+        // You can adjust these values to get the exact pose you want
+        // For example, to make it look like the entity is waving:
+        // this.leftArm.xRot = (float) Math.toRadians(-90);
+        // this.leftArm.yRot = (float) Math.toRadians(-45);
+        // this.leftArm.zRot = 0;
     }
 }
