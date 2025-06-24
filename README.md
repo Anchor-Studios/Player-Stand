@@ -16,14 +16,6 @@
 
 ---
 
-## ✅ Compatibility
-
-- **Minecraft:** 1.20.1 – 1.20.6
-- **Environment:** Singleplayer & Multiplayer
-- **Mod loaders:** Forge
-
----
-
 ## 📦 Installation
 
 1. Download the mod JAR from one of the following platforms:
